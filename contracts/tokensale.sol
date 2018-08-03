@@ -1,7 +1,5 @@
 pragma solidity ^0.4.23;
-// produced by the Solididy File Flattener (c) David Appleton 2018
-// contact : dave@akomba.com
-// released under Apache 2.0 licence
+
 contract REDTTokenConfig {
     string public constant NAME = "Real Estate Doc Token";
     string public constant SYMBOL = "REDT";
@@ -689,7 +687,7 @@ contract REDTTokenSale is REDTTokenSaleConfig, Claimable, Pausable, Salvageable 
     }
 
     function buyTokens(address beneficiary, uint weiAmount) internal whenNotPaused {
-        require(weiAmount < currentCap());
+        require(contributions[beneficiary].add(weiAmount) < currentCap());
         require(whiteListed.whiteList(beneficiary));
         require((weiAmount > MIN_CONTRIBUTION) || (weiAmount == SALE_CAP.sub(MIN_CONTRIBUTION)));
 

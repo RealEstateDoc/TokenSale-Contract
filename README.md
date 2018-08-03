@@ -1,2 +1,2 @@
 # TokenSale-Contract
-Token Sale Smart Contracts
+RealEstateDoc ERC20 Token: REDT

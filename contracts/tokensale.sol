@@ -189,7 +189,7 @@ contract Claimable is Ownable {
 }
 
 contract REDTTokenSaleConfig is REDTTokenConfig {
-    uint public constant MIN_CONTRIBUTION      = 100 finney;
+    uint public constant MIN_CONTRIBUTION      = 10 finney;
 
     
 
@@ -197,7 +197,7 @@ contract REDTTokenSaleConfig is REDTTokenConfig {
 
     uint public constant RESERVE_AMOUNT = 500000000 * DECIMALSFACTOR;
 
-    uint public constant SALE_START = 1537189200;
+    uint public constant SALE_START = 1534155600;
     uint public constant SALE_END = 1540990800;
     
     uint public constant SALE0_END = 1537794000;
@@ -214,8 +214,8 @@ contract REDTTokenSaleConfig is REDTTokenConfig {
     
     uint public constant SALE_CAP = 500000000 * DECIMALSFACTOR;
 
-    address public constant MULTISIG_ETH = 0x25C7A30F23a107ebF430FDFD582Afe1245B690Af;
-    address public constant MULTISIG_TKN = 0x25C7A30F23a107ebF430FDFD582Afe1245B690Af;
+    address public constant MULTISIG_ETH = 0x4C4E07fb1DC0B317c7403f82e8906Ae51e92B6E9;
+    address public constant MULTISIG_TKN = 0x4C4E07fb1DC0B317c7403f82e8906Ae51e92B6E9;
 
 }
 contract ERC20 is ERC20Basic {
@@ -618,7 +618,7 @@ contract REDTTokenSale is REDTTokenSaleConfig, Claimable, Pausable, Salvageable 
 
     constructor( WhiteListed _whiteListed ) public {
         
-        require(now < SALE_START);
+        //require(now < SALE_START);
         
         require(_whiteListed != address(0));
         
@@ -631,15 +631,15 @@ contract REDTTokenSale is REDTTokenSaleConfig, Claimable, Pausable, Salvageable 
 
     
     function initCaps() public {
-        uint[4] memory caps = [uint(10),20,30,40];
-        uint[4] memory times = [uint(1),4,12,24];
+        uint[4] memory caps = [uint(2),3,4,5];
+        uint[4] memory times = [uint(2),4,10,15];
         for (uint i = 0; i < caps.length; i++) {
             capRec memory cr;
             cr.time = times[i];
             cr.amount = caps[i];
             capz.push(cr);
         }
-        capDefault = 100;
+        capDefault = 1 * 0.1 ether;
     }
     
     function setCapRec(uint[] capsInEther, uint[] timesInHours, uint defaultCapInEther) public onlyOwner {
@@ -652,16 +652,16 @@ contract REDTTokenSale is REDTTokenSaleConfig, Claimable, Pausable, Salvageable 
             cr.amount = capsInEther[i];
             capz.push(cr);
         }
-        capDefault = defaultCapInEther;
+        capDefault = defaultCapInEther * 0.1 ether;
         
     }
     
     function currentCap() public view returns (uint) {
         for (uint i = 0; i < capz.length; i++) {
-            if (now < SALE_START + capz[i].time * 1 hours)
-                return (capz[i].amount * 1 ether);
+            if (now < SALE_START + capz[i].time * 1 minutes)
+                return (capz[i].amount * 0.01 ether);
         }
-        return capDefault;
+        return capDefault * 0.1 ether;
     }
 
 
@@ -710,7 +710,7 @@ contract REDTTokenSale is REDTTokenSaleConfig, Claimable, Pausable, Salvageable 
     public
 	  ownerOrMinter
     {
-        require(now < SALE_START);  
+        //require(now < SALE_START);  
         tokensRaised = tokensRaised.add(numtokens);
         token.mint(beneficiary,numtokens);
     }
